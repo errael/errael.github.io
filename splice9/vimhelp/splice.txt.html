@@ -1,0 +1,994 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>Splice9: splice.txt</title>
+<!--[if IE]>
+<link rel="stylesheet" href="vimhelp-ie.css" type="text/css">
+<![endif]-->
+<!--[if !IE]>-->
+<link rel="stylesheet" href="vimhelp.css" type="text/css">
+<!--<![endif]-->
+</head>
+<body>
+<div id="d1">
+<pre id="sp">                                                                                </pre>
+<div id="d2">
+
+<div id="d3">
+<pre>
+<a name="splice.txt" class="t">splice.txt</a>   a plugin for resolving three-way merge conflicts.
+
+<span class="h">                 _____       ___            ___       _____    </span>
+<span class="h">                / ___/____  / (_)__________(_) \  ____\___ \   </span>
+<span class="h">                \__ \/ __ \/ / / ___/ _ \__ \ \ \/ __ \/ __/   </span>
+<span class="h">               ___/ / /_/ / / / /__/  __/__\ \ \ \ \_\ \ \___  </span>
+<span class="h">              /____/ .___/_/_/\___/\___/ \___/\_\_\___. \____\ </span>
+<span class="h">                  /_/                                  \_\     </span>
+
+<span class="h">                                  SPLICE </span>
+       is a Vim plugin for resolving conflicts during three-way merges.
+
+     It&#x27;s designed to be used as a merge tool for version control systems
+                       like Mercurial, Git and Bazaar.
+
+<span class="h">==============================================================================</span>
+<span class="c">CONTENTS                                           </span> <a name="Splice" class="t">Splice</a> <a name="Splice-contents" class="t">Splice-contents</a>
+
+    1. Version Control Integration .............. <a href="splice.txt.html#SpliceVCS" class="l">SpliceVCS</a>
+        1.1 Mercurial ........................... <a href="splice.txt.html#SpliceVCS_hg" class="l">SpliceVCS_hg</a>
+        1.2 Git ................................. <a href="splice.txt.html#SpliceVCS_git" class="l">SpliceVCS_git</a>
+        1.3 Bazaar .............................. <a href="splice.txt.html#SpliceVCS_bzr" class="l">SpliceVCS_bzr</a>
+    2. Basic Usage .............................. <a href="splice.txt.html#SpliceUsage" class="l">SpliceUsage</a>
+        2.1 Files ............................... <a href="splice.txt.html#SpliceUsage_files" class="l">SpliceUsage_files</a>
+        2.2 Modes ............................... <a href="splice.txt.html#SpliceUsage_modes" class="l">SpliceUsage_modes</a>
+        2.3 HUD ................................. <a href="splice.txt.html#SpliceUsage_hud" class="l">SpliceUsage_hud</a>
+    3. Key Bindings ............................. <a href="splice.txt.html#SpliceKeys" class="l">SpliceKeys</a>
+        3.1 Mode Selection Keys ................. <a href="splice.txt.html#SpliceKeys_mode" class="l">SpliceKeys_mode</a>
+        3.2 File Selection Keys ................. <a href="splice.txt.html#SpliceKeys_file" class="l">SpliceKeys_file</a>
+        3.3 Other Keys .......................... <a href="splice.txt.html#SpliceKeys_other" class="l">SpliceKeys_other</a>
+    4. Modes .................................... <a href="splice.txt.html#SpliceModes" class="l">SpliceModes</a>
+        4.1 <a href="splice.txt.html#Grid" class="d">Grid</a> ................................ <a href="splice.txt.html#SpliceModes_grid" class="l">SpliceModes_grid</a>
+        4.2 <a href="splice.txt.html#Loupe" class="d">Loupe</a> ............................... <a href="splice.txt.html#SpliceModes_loupe" class="l">SpliceModes_loupe</a>
+        4.3 <a href="splice.txt.html#Compare" class="d">Compare</a> ............................. <a href="splice.txt.html#SpliceModes_compare" class="l">SpliceModes_compare</a>
+        4.4 <a href="splice.txt.html#Path" class="d">Path</a> ................................ <a href="splice.txt.html#SpliceModes_path" class="l">SpliceModes_path</a>
+    5. Configuration ............................ <a href="splice.txt.html#SpliceConfig" class="l">SpliceConfig</a>
+        5.1 debug ............................... <a href="splice.txt.html#SpliceConfig_debug" class="l">SpliceConfig_debug</a>
+        5.2 disable ............................. <a href="splice.txt.html#SpliceConfig_disable" class="l">SpliceConfig_disable</a>
+        5.3 initial_diff_grid ................... <a href="splice.txt.html#SpliceConfig_id_grid" class="l">SpliceConfig_id_grid</a>
+        5.4 initial_diff_loupe .................. <a href="splice.txt.html#SpliceConfig_id_loupe" class="l">SpliceConfig_id_loupe</a>
+        5.5 initial_diff_compare ................ <a href="splice.txt.html#SpliceConfig_id_compare" class="l">SpliceConfig_id_compare</a>
+        5.6 initial_diff_path ................... <a href="splice.txt.html#SpliceConfig_id_path" class="l">SpliceConfig_id_path</a>
+        5.7 initial_layout_grid ................. <a href="splice.txt.html#SpliceConfig_il_grid" class="l">SpliceConfig_il_grid</a>
+        5.8 initial_layout_loupe ................ <a href="splice.txt.html#SpliceConfig_il_loupe" class="l">SpliceConfig_il_loupe</a>
+        5.9 initial_layout_compare .............. <a href="splice.txt.html#SpliceConfig_il_compare" class="l">SpliceConfig_il_compare</a>
+        5.10 initial_layout_path ................ <a href="splice.txt.html#SpliceConfig_il_path" class="l">SpliceConfig_il_path</a>
+        5.11 initial_scrollbind_grid ............ <a href="splice.txt.html#SpliceConfig_is_grid" class="l">SpliceConfig_is_grid</a>
+        5.12 initial_scrollbind_loupe ........... <a href="splice.txt.html#SpliceConfig_is_loupe" class="l">SpliceConfig_is_loupe</a>
+        5.13 initial_scrollbind_compare ......... <a href="splice.txt.html#SpliceConfig_is_compare" class="l">SpliceConfig_is_compare</a>
+        5.14 initial_scrollbind_path ............ <a href="splice.txt.html#SpliceConfig_is_path" class="l">SpliceConfig_is_path</a>
+        5.15 initial_mode ....................... <a href="splice.txt.html#SpliceConfig_im" class="l">SpliceConfig_im</a>
+        5.16 wrap ............................... <a href="splice.txt.html#SpliceConfig_wrap" class="l">SpliceConfig_wrap</a>
+        5.17 prefix ............................. <a href="splice.txt.html#SpliceConfig_prefix" class="l">SpliceConfig_prefix</a>
+        5.18 leader ............................. <a href="splice.txt.html#SpliceConfig_leader" class="l">SpliceConfig_leader</a>
+        5.19 bind_use_alt ....................... <a href="splice.txt.html#SpliceConfig_bind_alt" class="l">SpliceConfig_bind_alt</a>
+        5.20 bind_&lt;command&gt; ..................... <a href="splice.txt.html#SpliceConfig_bind_command" class="l">SpliceConfig_bind_command</a>
+        5.21 bind_extra ......................... <a href="splice.txt.html#SpliceConfig_bind_extra" class="l">SpliceConfig_bind_extra</a>
+        5.22 hl_&lt;highlight&gt; ..................... <a href="splice.txt.html#SpliceConfig_highlights" class="l">SpliceConfig_highlights</a>
+        5.23 flash_cursor_timer ................. <a href="splice.txt.html#SpliceConfig_cursor_timer" class="l">SpliceConfig_cursor_timer</a>
+        5.24 log_&lt;config&gt;........................ <a href="splice.txt.html#SpliceConfig_logging" class="l">SpliceConfig_logging</a>
+    6. HUD ...................................... <a href="splice.txt.html#SpliceHUD" class="l">SpliceHUD</a>
+        6.1 Diffs Off ........................... <a href="splice.txt.html#SpliceHUD_DiffsOff" class="l">SpliceHUD_DiffsOff</a>
+        6.2 Toggle Scrollbind ................... <a href="splice.txt.html#SpliceHUD_ToggleScrollbind" class="l">SpliceHUD_ToggleScrollbind</a>
+        6.3 <a href="splice.txt.html#Layout" class="d">Layout</a> and diff ..................... <a href="splice.txt.html#SpliceHUD_Layout" class="l">SpliceHUD_Layout</a>
+        6.4 <a href="splice.txt.html#Diff" class="d">Diff</a> Options Dialog ................. <a href="splice.txt.html#SpliceHUD_DiffOptions" class="l">SpliceHUD_DiffOptions</a>
+        6.5 <a href="splice.txt.html#Splice" class="d">Splice</a> Command Shortcuts Dialog ..... <a href="splice.txt.html#SpliceHUD_Shortcuts" class="l">SpliceHUD_Shortcuts</a>
+    7. External Website ......................... <a href="splice.txt.html#SpliceExternal" class="l">SpliceExternal</a>
+    8. License .................................. <a href="splice.txt.html#SpliceLicense" class="l">SpliceLicense</a>
+    9. Bugs ..................................... <a href="splice.txt.html#SpliceBugs" class="l">SpliceBugs</a>
+   10. Contributing ............................. <a href="splice.txt.html#SpliceContributing" class="l">SpliceContributing</a>
+   11. Changelog ................................ <a href="splice.txt.html#SpliceChangelog" class="l">SpliceChangelog</a>
+   12. Credits .................................. <a href="splice.txt.html#SpliceCredits" class="l">SpliceCredits</a>
+
+
+<span class="h">==============================================================================</span>
+1. Version Control Integration                                     <a name="SpliceVCS" class="t">SpliceVCS</a>
+
+<a href="splice.txt.html#Splice" class="d">Splice</a> is meant to be called by your version control system when it needs you
+to resolve merge conflicts.  You will need to configure your VCS to do this
+before you can use Splice.
+
+You may find these vim options useful when invoking Vim.
+Use the following to startup with more columns
+
+<span class="e">    -c &quot;set columns=220&quot;</span>
+
+If Splic9 is configured with multi-character shortcuts (used internally with
+:map), use the following to prevent shortcut input, :mapped key sequences,
+from being interrupted by a time out.
+
+<span class="e">    -c &quot;set ttimeout&quot; -c &quot;set notimeout&quot;</span>
+
+
+*<span class="n">Note:</span> If you&#x27;d like to use a console vim intead of Vim GUI, replace
+       &quot;gvim&quot;, or &quot;mvim&quot; on a Mac, in the following commands with &quot;vim&quot;.
+<span class="h">------------------------------------------------------------------------------</span>
+1.1 Mercurial                                                   <a name="SpliceVCS_hg" class="t">SpliceVCS_hg</a>
+
+Add the following lines to &quot;~/.hgrc&quot;: 
+
+<span class="e">    [merge-tools]</span>
+<span class="e">    splice.executable = gvim</span>
+<span class="e">    splice.args = -f $base $local $other $output -c &#x27;Splice9Init&#x27;</span>
+<span class="e">    splice.premerge = keep</span>
+<span class="e">    splice.priority = 1</span>
+
+Mercurial will now open Vim with <a href="splice.txt.html#Splice" class="d">Splice</a> whenever a file has merge conflicts
+which need to be resolved.
+
+<span class="h">------------------------------------------------------------------------------</span>
+1.2 Git                                                        <a name="SpliceVCS_git" class="t">SpliceVCS_git</a>
+
+Add the following lines to &quot;~/.gitconfig&quot;: 
+
+<span class="e">    [merge]</span>
+<span class="e">    tool = splice</span>
+
+<span class="e">    [mergetool &quot;splice&quot;]</span>
+<span class="e">    cmd = &quot;gvim -f $BASE $LOCAL $REMOTE $MERGED -c &#x27;Splice9Init&#x27;&quot;</span>
+<span class="e">    trustExitCode = true</span>
+
+If a &quot;git merge&quot; or &quot;git pull&quot; fails with merge conflicts you can run
+&quot;git mergetool&quot;.  Git will loop over all the files with conflicts and allow
+you to resolve them with Vim and Splice.
+
+<span class="h">------------------------------------------------------------------------------</span>
+1.3 Bazaar                                                     <a name="SpliceVCS_bzr" class="t">SpliceVCS_bzr</a>
+
+For Bazaar 2.4 or greater, add the following line to bazaar.conf:
+
+<span class="e">    bzr.mergetool.splice = gvim {base} {this} {other} {result} -c &#x27;Splice9Init&#x27;</span>
+
+Optionally, change the default merge tool by setting:
+
+<span class="e">    bzr.default_mergetool = splice</span>
+
+For earlier versions of Bazaar, set the following entry in bazaar.conf:
+
+<span class="e">    external_merge = gvim %b %t %o %r -c &#x27;Splice9Init&#x27;</span>
+
+You can now use Vim with <a href="splice.txt.html#Splice" class="d">Splice</a> from &quot;bzr qconflicts&quot;.
+
+<span class="h">==============================================================================</span>
+2. Basic Usage                                                   <a name="SpliceUsage" class="t">SpliceUsage</a>
+
+<a href="splice.txt.html#Splice" class="d">Splice</a> takes a lot of inspiration for its user interface from Adobe Lightroom,
+a photo editing program.
+
+When resolving merge conflicts your goal is:
+
+  - Examine the three files describing the changes being merged.
+  - Combine these changes into a fourth file (the &quot;result&quot;).
+  - Save the result to disk.
+  - Exit Vim with a non-error status code to tell the VCS the merge succeeded.
+
+<a href="splice.txt.html#Splice" class="d">Splice</a> has several &quot;modes&quot; to help you work with the various files.
+
+<span class="h">------------------------------------------------------------------------------</span>
+2.1 Files                                                  <a name="SpliceUsage_files" class="t">SpliceUsage_files</a>
+
+When resolving a merge there are four files you will work with:
+
+<a href="splice.txt.html#Original" class="d">Original</a>                                       <a name="SpliceUsage_files_original" class="t">SpliceUsage_files_original</a>
+    The original file, as it appears in the parent revision of the two
+    revisions being merged.
+
+<a href="splice.txt.html#One" class="d">One</a>                                                 <a name="SpliceUsage_files_one" class="t">SpliceUsage_files_one</a>
+    The file as it appears in the first revision being merged.
+
+    This is usually the &quot;current&quot; revision, or the one you are at when you
+    run &quot;hg merge REV&quot;).
+
+<a href="splice.txt.html#Two" class="d">Two</a>                                                 <a name="SpliceUsage_files_two" class="t">SpliceUsage_files_two</a>
+    The file as it appears in the second revision being merged.
+
+    This is usually the &quot;target&quot; revision, or the one you specify in the
+    &quot;hg merge REV&quot; command).
+
+<a href="splice.txt.html#Result" class="d">Result</a>                                           <a name="SpliceUsage_files_result" class="t">SpliceUsage_files_result</a>
+    The result of merging the two revisions of the file.
+
+    This is the file that your version control system expects to contain the
+    final result once you&#x27;re done.
+
+<span class="h">------------------------------------------------------------------------------</span>
+2.2 Modes                                                  <a name="SpliceUsage_modes" class="t">SpliceUsage_modes</a>
+
+<a href="splice.txt.html#Splice" class="d">Splice</a> has four &quot;modes&quot; or &quot;views&quot; for working with the files.
+
+<a href="splice.txt.html#Grid" class="d">Grid</a>                                               <a name="SpliceUsage_modes_grid" class="t">SpliceUsage_modes_grid</a>
+    Shows all four files at once to give you an overview of the merge.
+
+    See <a href="splice.txt.html#SpliceModes_grid" class="l">SpliceModes_grid</a> for more information.
+
+<a href="splice.txt.html#Loupe" class="d">Loupe</a>                                             <a name="SpliceUsage_modes_loupe" class="t">SpliceUsage_modes_loupe</a>
+    Shows a single file at a time for close examination of a single file.
+
+    See <a href="splice.txt.html#SpliceModes_loupe" class="l">SpliceModes_loupe</a> for more information.
+
+<a href="splice.txt.html#Compare" class="d">Compare</a>                                         <a name="SpliceUsage_modes_compare" class="t">SpliceUsage_modes_compare</a>
+    Shows two files at a time for examining the movement of changes between
+    pairs of files.
+
+    See <a href="splice.txt.html#SpliceModes_compare" class="l">SpliceModes_compare</a> for more information.
+
+<a href="splice.txt.html#Path" class="d">Path</a>                                               <a name="SpliceUsage_modes_path" class="t">SpliceUsage_modes_path</a>
+    Shows three files at a time:
+
+      - The original
+      - Either one or two
+      - The result
+
+    Used for examining how a change moves through one &quot;path&quot; or &quot;branch&quot;
+    of the merge.
+
+    See <a href="splice.txt.html#SpliceModes_path" class="l">SpliceModes_path</a> for more information.
+
+<span class="h">------------------------------------------------------------------------------</span>
+2.3 HUD                                                      <a name="SpliceUsage_hud" class="t">SpliceUsage_hud</a>
+
+The heads up display, HUD, is active. Command names are highlighted when the
+mouse rolls over them and clicking them executes the comand. There are state
+indicators and some popup dialogs that may be invoked.
+
+See <a href="splice.txt.html#SpliceHUD" class="l">SpliceHUD</a> for more information.
+
+
+<span class="h">==============================================================================</span>
+3. Key Bindings                                                   <a name="SpliceKeys" class="t">SpliceKeys</a>
+
+By default all of Splice&#x27;s key mappings are prefixed with a single key to
+group them together and avoid shadowing other mappings.  By default this key
+is &#x27;-&#x27; (minus/hyphen).
+
+See the <a href="splice.txt.html#SpliceConfig_prefix" class="l">SpliceConfig_prefix</a> setting if you&#x27;d like to change this prefix to
+something else.
+
+To use the Alt, aka Meta, key instead of a prefix see <a href="splice.txt.html#SpliceConfig_bind_alt" class="l">SpliceConfig_bind_alt</a>.
+
+Each command&#x27;s key mapping can be individually specified. These mappings do
+not use the prefix or the Alt key, see <a href="splice.txt.html#SpliceConfig_bind_command" class="l">SpliceConfig_bind_command</a>.
+
+All keybindings are used across (almost) all modes.
+
+The behavior of some of them changes depending on the current mode, but the
+effects should be fairly intuitive.
+
+<span class="h">------------------------------------------------------------------------------</span>
+3.1 Mode Selection Keys                                      <a name="SpliceKeys_mode" class="t">SpliceKeys_mode</a>
+
+<span class="s">&lt;prefix&gt;</span>g                                       <a name="Grid" class="t">Grid</a>
+                        Switch to grid view.
+
+<span class="s">&lt;prefix&gt;</span>l                                      <a name="Loupe" class="t">Loupe</a>
+                        Switch to loupe view.
+
+<span class="s">&lt;prefix&gt;</span>c                                    <a name="Compare" class="t">Compare</a>
+                        Switch to compare view.
+
+<span class="s">&lt;prefix&gt;</span>p                                       <a name="Path" class="t">Path</a>
+                        Switch to path view.
+
+<span class="h">------------------------------------------------------------------------------</span>
+3.2 File Selection Keys                                      <a name="SpliceKeys_file" class="t">SpliceKeys_file</a>
+
+<span class="s">&lt;prefix&gt;</span>o                                   <a name="Original" class="t">Original</a>
+                        Select the original file.
+
+<span class="s">&lt;prefix&gt;</span>1                                        <a name="One" class="t">One</a>
+                        Select file one.
+
+<span class="s">&lt;prefix&gt;</span>2                                        <a name="Two" class="t">Two</a>
+                        Select file two.
+
+<span class="s">&lt;prefix&gt;</span>r                                     <a name="Result" class="t">Result</a>
+                        Select the result file.
+
+<span class="h">------------------------------------------------------------------------------</span>
+3.3 Other Keys                                              <a name="SpliceKeys_other" class="t">SpliceKeys_other</a>
+
+<span class="s">&lt;prefix&gt;</span>d                                       <a name="Diff" class="t">Diff</a>
+                        Cycle through various diff combinations.
+
+<span class="s">&lt;prefix&gt;</span>D                                    <a name="DiffOff" class="t">DiffOff</a>
+                        Turn off all diffs. If diffs are off, turn
+                        diffs on at the same place in the cycle where
+                        diffs were turned off. Especially useful in
+                        `path mode` <a href="splice.txt.html#SpliceModes_path_diffs" class="l">SpliceModes_path_diffs</a>.
+
+<span class="s">&lt;prefix&gt;</span>u                                    <a name="UseHunk" class="t">UseHunk</a>
+                        Place a hunk from file one or two into
+                        the result file.
+
+<span class="s">&lt;prefix&gt;</span>s                                     <a name="Scroll" class="t">Scroll</a>
+                        Toggle scroll locking on and off.
+
+<span class="s">&lt;prefix&gt;</span><span class="s">&lt;space&gt;</span>                               <a name="Layout" class="t">Layout</a>
+                        Cycle through various layouts of the
+                        current view.
+
+<span class="s">&lt;prefix&gt;</span>n                                       <a name="Next" class="t">Next</a>
+                        Move to the next unresolved conflict.
+
+<span class="s">&lt;prefix&gt;</span>N                                   <a name="Previous" class="t">Previous</a>
+                        Move to the previous unresolved conflict.
+
+<span class="s">&lt;prefix&gt;</span>q                                       <a name="Quit" class="t">Quit</a>
+                        Save the result file and exit Vim.
+
+                        Indicates to the VCS that the merge was
+                        successful and it should use the current
+                        contents of the result file as the result.
+
+<span class="s">&lt;prefix&gt;</span>CC                                    <a name="Cancel" class="t">Cancel</a>
+                        Exits Vim with an error code (like <span class="l">:cquit</span>).
+                        Indicates to the VCS that the merge was
+                        NOT successful.
+
+<span class="h">==============================================================================</span>
+4. Modes                                                         <a name="SpliceModes" class="t">SpliceModes</a>
+
+This section describes each mode in detail.
+
+<span class="h">------------------------------------------------------------------------------</span>
+4.1 <a href="splice.txt.html#Grid" class="d">Grid</a>                                                    <a name="SpliceModes_grid" class="t">SpliceModes_grid</a>
+
+The grid view is used to get an overview of all files at once to get a birds&#x27;
+eye view of the merge.
+
+<a href="splice.txt.html#Grid" class="d">Grid</a> Layouts                                     <a name="SpliceModes_grid_layouts" class="t">SpliceModes_grid_layouts</a>
+<span class="h">------------</span>
+
+    <a href="splice.txt.html#Layout" class="d">Layout</a> 0                 <a href="splice.txt.html#Layout" class="d">Layout</a> 1                        <a href="splice.txt.html#Layout" class="d">Layout</a> 2
+    +-------------------+    +--------------------------+    +---------------+
+    |     <a href="splice.txt.html#Original" class="d">Original</a>      |    | <a href="splice.txt.html#One" class="d">One</a>    | <a href="splice.txt.html#Result" class="d">Result</a> | <a href="splice.txt.html#Two" class="d">Two</a>    |    |      <a href="splice.txt.html#One" class="d">One</a>      |
+    |                   |    |        |        |        |    |               |
+    +-------------------+    |        |        |        |    +---------------+
+    |  <a href="splice.txt.html#One" class="d">One</a>    |    <a href="splice.txt.html#Two" class="d">Two</a>  |    |        |        |        |    |     <a href="splice.txt.html#Result" class="d">Result</a>    |
+    |         |         |    |        |        |        |    |               |
+    +-------------------+    |        |        |        |    +---------------+
+    |      <a href="splice.txt.html#Result" class="d">Result</a>       |    |        |        |        |    |      <a href="splice.txt.html#Two" class="d">Two</a>      |
+    |                   |    |        |        |        |    |               |
+    +-------------------+    +--------------------------+    +---------------+
+
+Grid-Specific Key Bindings                          <a name="SpliceModes_grid_keys" class="t">SpliceModes_grid_keys</a>
+<span class="h">--------------------------</span>
+
+<span class="s">&lt;prefix&gt;</span>o                                   <a name="Original-Grid" class="t">Original-Grid</a>
+                        Select the original file, but only in layout 0.
+
+<span class="s">&lt;prefix&gt;</span>u                                    <a name="UseHunk-Grid" class="t">UseHunk-Grid</a>
+                        Disabled in this mode.
+
+<span class="s">&lt;prefix&gt;</span>u1                                  <a name="UseHunk1-Grid" class="t">UseHunk1-Grid</a>
+                        Place a hunk from file one into the result file.
+
+<span class="s">&lt;prefix&gt;</span>u2                                  <a name="UseHunk2-Grid" class="t">UseHunk2-Grid</a>
+                        Place a hunk from file two into the result file.
+
+<span class="s">&lt;prefix&gt;</span>u0                                  <a name="UseHunk0-Grid" class="t">UseHunk0-Grid</a>
+                        Place hunks from both file one and file two into the
+                        result file; use &#x27;&lt;&lt;&lt;&#x27;, &#x27;===&#x27;, .&gt;&gt;&gt;&#x27; to delineate and
+                        distinguish one and two.
+
+<a href="splice.txt.html#Grid" class="d">Grid</a> Diffs                                         <a name="SpliceModes_grid_diffs" class="t">SpliceModes_grid_diffs</a>
+<span class="h">----------</span>
+
+0 - No diff.
+1 - <a href="splice.txt.html#Diff" class="d">Diff</a> all files.
+
+<span class="h">------------------------------------------------------------------------------</span>
+4.2 <a href="splice.txt.html#Loupe" class="d">Loupe</a>                                                  <a name="SpliceModes_loupe" class="t">SpliceModes_loupe</a>
+
+The loupe view is used to focus on and examine a single file in detail.
+
+<a href="splice.txt.html#Loupe" class="d">Loupe</a> Layouts                                   <a name="SpliceModes_loupe_layouts" class="t">SpliceModes_loupe_layouts</a>
+<span class="h">-------------</span>
+
+    <a href="splice.txt.html#Layout" class="d">Layout</a> 0
+    +-----------------+
+    | Any Single File |
+    |                 |
+    |                 |
+    |                 |
+    |                 |
+    |                 |
+    +-----------------+
+
+Loupe-Specific Key Bindings                        <a name="SpliceModes_loupe_keys" class="t">SpliceModes_loupe_keys</a>
+<span class="h">---------------------------</span>
+
+<span class="s">&lt;prefix&gt;</span>u                                    <a name="UseHunk-Loupe" class="t">UseHunk-Loupe</a>
+                        Disabled in this mode.
+
+<a href="splice.txt.html#Loupe" class="d">Loupe</a> Diffs                                       <a name="SpliceModes_loupe_diffs" class="t">SpliceModes_loupe_diffs</a>
+<span class="h">-----------</span>
+
+No diffs are possible in loupe mode.
+
+<span class="h">------------------------------------------------------------------------------</span>
+4.3 <a href="splice.txt.html#Compare" class="d">Compare</a>                                              <a name="SpliceModes_compare" class="t">SpliceModes_compare</a>
+
+The compare view is used to examine the differences between two files at
+a time.
+
+<a href="splice.txt.html#Compare" class="d">Compare</a> Layouts                               <a name="SpliceModes_compare_layouts" class="t">SpliceModes_compare_layouts</a>
+<span class="h">---------------</span>
+
+    <a href="splice.txt.html#Layout" class="d">Layout</a> 0                 <a href="splice.txt.html#Layout" class="d">Layout</a> 1
+    +-------------------+    +-------------------+
+    | Orig    | <a href="splice.txt.html#Result" class="d">Result</a>  |    | Orig              |
+    |         |         |    | or <a href="splice.txt.html#One" class="d">One</a>            |
+    |    or   |    or   |    | or <a href="splice.txt.html#Two" class="d">Two</a>            |
+    |         |         |    |                   |
+    | <a href="splice.txt.html#One" class="d">One</a>     | <a href="splice.txt.html#One" class="d">One</a>     |    +-------------------+
+    |         |         |    | <a href="splice.txt.html#One" class="d">One</a>               |
+    |    or   |    or   |    | or <a href="splice.txt.html#Two" class="d">Two</a>            |
+    |         |         |    | or <a href="splice.txt.html#Result" class="d">Result</a>         |
+    | <a href="splice.txt.html#Two" class="d">Two</a>     | <a href="splice.txt.html#Two" class="d">Two</a>     |    |                   |
+    +-------------------+    +-------------------+
+
+Compare-Specific Key Bindings                    <a name="SpliceModes_compare_keys" class="t">SpliceModes_compare_keys</a>
+<span class="h">-----------------------------</span>
+
+<span class="s">&lt;prefix&gt;</span>u                                    <a name="UseHunk-Compare" class="t">UseHunk-Compare</a>
+                        If the result file and file one/two are
+                        both visible, place a hunk from one/two
+                        into the result file.  Otherwise: disabled.
+
+<a href="splice.txt.html#Compare" class="d">Compare</a> Diffs                                   <a name="SpliceModes_compare_diffs" class="t">SpliceModes_compare_diffs</a>
+<span class="h">-------------</span>
+
+0 - No diff.
+1 - <a href="splice.txt.html#Diff" class="d">Diff</a> both files.
+
+<span class="h">------------------------------------------------------------------------------</span>
+4.4 <a href="splice.txt.html#Path" class="d">Path</a>                                                    <a name="SpliceModes_path" class="t">SpliceModes_path</a>
+
+The path view is used to view the flow of changed through one &quot;path&quot; or
+&quot;branch&quot; of the merge.
+
+<a href="splice.txt.html#Path" class="d">Path</a> Layouts                                     <a name="SpliceModes_path_layouts" class="t">SpliceModes_path_layouts</a>
+<span class="h">------------</span>
+
+    <a href="splice.txt.html#Layout" class="d">Layout</a> 0                        <a href="splice.txt.html#Layout" class="d">Layout</a> 1
+    +--------------------------+    +-------------------+
+    | Orig   |        | <a href="splice.txt.html#Result" class="d">Result</a> |    | Orig              |
+    |        | <a href="splice.txt.html#One" class="d">One</a>    |        |    |                   |
+    |        |        |        |    +-------------------+
+    |        |   or   |        |    | <a href="splice.txt.html#One" class="d">One</a>               |
+    |        |        |        |    | or <a href="splice.txt.html#Two" class="d">Two</a>            |
+    |        | <a href="splice.txt.html#Two" class="d">Two</a>    |        |    +-------------------+
+    |        |        |        |    | <a href="splice.txt.html#Result" class="d">Result</a>            |
+    |        |        |        |    |                   |
+    +--------------------------+    +-------------------+
+
+
+Path-Specific Key Bindings                          <a name="SpliceModes_path_keys" class="t">SpliceModes_path_keys</a>
+<span class="h">--------------------------</span>
+
+<span class="s">&lt;prefix&gt;</span>u                                    <a name="UseHunk-Path" class="t">UseHunk-Path</a>
+                        Place a hunk from file one or two (whichever
+                        is currently in the center window) into the
+                        result file.
+
+<a href="splice.txt.html#Path" class="d">Path</a> Diffs                                         <a name="SpliceModes_path_diffs" class="t">SpliceModes_path_diffs</a>
+<span class="h">----------</span>
+
+0 - No diff.
+1 - <a href="splice.txt.html#Diff" class="d">Diff</a> the original and result windows.
+2 - <a href="splice.txt.html#Diff" class="d">Diff</a> the original and center windows.
+3 - <a href="splice.txt.html#Diff" class="d">Diff</a> the center and result windows.
+4 - <a href="splice.txt.html#Diff" class="d">Diff</a> the original and center and result windows.
+
+<span class="h">==============================================================================</span>
+5. Configuration                                                <a name="SpliceConfig" class="t">SpliceConfig</a>
+
+You can tweak the behavior of Splice9 by setting variables in your <span class="l">vimrc</span>
+file; the old <a href="splice.txt.html#Splice" class="d">Splice</a> global variable names work with Splice9. However that
+method is deprecated and using the `g:splice_config` dictionary is preferred.
+For example, using a splice configuration dictionary, in vim9script 
+<span class="e">        g:splice_config = {</span>
+<span class="e">        initial_mode: &quot;compare&quot;,</span>
+<span class="e">        initial_layout_grid: 2,</span>
+<span class="e">        initial_layout_compare: 1,</span>
+<span class="e">    }</span>
+
+Or, using separate splice configuration statements, in a legacy script 
+<span class="e">        let g:splice_config = {}</span>
+<span class="e">    let g:splice_config.initial_mode = &quot;compare&quot;</span>
+<span class="e">    let g:splice_config.initial_layout_grid = 2</span>
+<span class="e">    let g:splice_config.initial_layout_compare = 1</span>
+
+The deprecated global variable name is derived from the g:splice_config name
+by prefixing the name with &quot;splice_&quot;. For example 
+<span class="e">    let g:splice_initial_mode = &quot;compare&quot;</span>
+sets the `initial_mode` configuration variable to `&quot;compare&quot;`.
+
+*<span class="n">Note:</span> When g:splice_config exists the deprecated global variables are
+       ignored and NOT used.
+
+<span class="h">------------------------------------------------------------------------------</span>
+5.1 g:splice_config.debug                                 <a name="SpliceConfig_debug" class="t">SpliceConfig_debug</a>
+
+Ignored
+
+<span class="h">------------------------------------------------------------------------------</span>
+5.2 g:splice_config.disable                             <a name="SpliceConfig_disable" class="t">SpliceConfig_disable</a>
+
+Ignored
+
+<span class="h">------------------------------------------------------------------------------</span>
+5.3 g:splice_config.initial_diff_grid                   <a name="SpliceConfig_id_grid" class="t">SpliceConfig_id_grid</a>
+
+Set this to change the diff the grid mode starts in.
+
+See <a href="splice.txt.html#SpliceModes_grid_diffs" class="l">SpliceModes_grid_diffs</a> for the list of diffs.
+
+Options: 0, or 1
+Default: 0
+
+<span class="h">------------------------------------------------------------------------------</span>
+5.4 g:splice_config.initial_diff_loupe                 <a name="SpliceConfig_id_loupe" class="t">SpliceConfig_id_loupe</a>
+
+Set this to change the diff the loupe mode starts in.
+
+See <a href="splice.txt.html#SpliceModes_loupe_diffs" class="l">SpliceModes_loupe_diffs</a> for the list of diffs.
+
+Options: 0
+Default: 0
+
+<span class="h">------------------------------------------------------------------------------</span>
+5.5 g:splice_config.initial_diff_compare             <a name="SpliceConfig_id_compare" class="t">SpliceConfig_id_compare</a>
+
+Set this to change the diff the compare mode starts in.
+
+See <a href="splice.txt.html#SpliceModes_compare_diffs" class="l">SpliceModes_compare_diffs</a> for the list of diffs.
+
+Options: 0 or 1
+Default: 0
+
+<span class="h">------------------------------------------------------------------------------</span>
+5.6 g:splice_config.initial_diff_path                   <a name="SpliceConfig_id_path" class="t">SpliceConfig_id_path</a>
+
+Set this to change the diff the path mode starts in.
+
+See <a href="splice.txt.html#SpliceModes_path_diffs" class="l">SpliceModes_path_diffs</a> for the list of diffs.
+
+options: 0, 1, 2, 3, or 4
+Default: 0
+
+<span class="h">------------------------------------------------------------------------------</span>
+5.7 g:splice_config.initial_layout_grid                 <a name="SpliceConfig_il_grid" class="t">SpliceConfig_il_grid</a>
+
+Set this to change the layout the grid mode starts in.
+
+See <a href="splice.txt.html#SpliceModes_grid_layouts" class="l">SpliceModes_grid_layouts</a> for the list of layouts.
+
+Options: 0, 1, or 2
+Default: 0
+
+<span class="h">------------------------------------------------------------------------------</span>
+5.8 g:splice_config.initial_layout_loupe               <a name="SpliceConfig_il_loupe" class="t">SpliceConfig_il_loupe</a>
+
+Set this to change the layout the loupe mode starts in.
+
+See <a href="splice.txt.html#SpliceModes_loupe_layouts" class="l">SpliceModes_loupe_layouts</a> for the list of layouts.
+
+Options: 0
+Default: 0
+
+<span class="h">------------------------------------------------------------------------------</span>
+5.9 g:splice_config.initial_layout_compare           <a name="SpliceConfig_il_compare" class="t">SpliceConfig_il_compare</a>
+
+Set this to change the layout the compare mode starts in.
+
+See <a href="splice.txt.html#SpliceModes_compare_layouts" class="l">SpliceModes_compare_layouts</a> for the list of layouts.
+
+Options: 0 or 1
+Default: 0
+
+<span class="h">------------------------------------------------------------------------------</span>
+5.10 g:splice_config.initial_layout_path                <a name="SpliceConfig_il_path" class="t">SpliceConfig_il_path</a>
+
+Set this to change the layout the path mode starts in.
+
+See <a href="splice.txt.html#SpliceModes_path_layouts" class="l">SpliceModes_path_layouts</a> for the list of layouts.
+
+Options: 0 or 1
+Default: 0
+
+<span class="h">------------------------------------------------------------------------------</span>
+5.11 g:splice_config.initial_scrollbind_grid            <a name="SpliceConfig_is_grid" class="t">SpliceConfig_is_grid</a>
+
+Set this to 1 to enable <span class="l">scrollbind</span> by default in grid mode.
+
+Options: 0 or 1
+Default: 0
+
+<span class="h">------------------------------------------------------------------------------</span>
+5.12 g:splice_config.initial_scrollbind_loupe          <a name="SpliceConfig_is_loupe" class="t">SpliceConfig_is_loupe</a>
+
+Set this to 1 to enable <span class="l">scrollbind</span> by default in loupe mode.
+
+Options: 0 or 1
+Default: 0
+
+<span class="h">------------------------------------------------------------------------------</span>
+5.13 g:splice_config.initial_scrollbind_compare      <a name="SpliceConfig_is_compare" class="t">SpliceConfig_is_compare</a>
+
+Set this to 1 to enable <span class="l">scrollbind</span> by default in compare mode.
+
+Options: 0 or 1
+Default: 0
+
+<span class="h">------------------------------------------------------------------------------</span>
+5.14 g:splice_config.initial_scrollbind_path            <a name="SpliceConfig_is_path" class="t">SpliceConfig_is_path</a>
+
+Set this to 1 to enable <span class="l">scrollbind</span> by default in path mode.
+
+Options: 0 or 1
+Default: 0
+
+<span class="h">------------------------------------------------------------------------------</span>
+5.15 g:splice_config.initial_mode                            <a name="SpliceConfig_im" class="t">SpliceConfig_im</a>
+
+Set this to change the mode <a href="splice.txt.html#Splice" class="d">Splice</a> initially starts up in.
+
+See <a href="splice.txt.html#SpliceModes" class="l">SpliceModes</a> for a description of each mode.
+
+Options: &quot;grid&quot;, &quot;loupe&quot;, &quot;compare&quot;, or &quot;path&quot;
+Default: &quot;grid&quot;
+
+<span class="h">------------------------------------------------------------------------------</span>
+5.16 g:splice_config.wrap                                  <a name="SpliceConfig_wrap" class="t">SpliceConfig_wrap</a>
+
+Set this to &quot;wrap&quot; or &quot;nowrap&quot; to set <span class="l">wrap</span> or <span class="l">nowrap</span> on all windows by
+default.
+
+By default <a href="splice.txt.html#Splice" class="d">Splice</a> will use your default settings.
+
+Options: &quot;wrap&quot;, &quot;nowrap&quot;
+Default: None (use the default settings)
+
+<span class="h">------------------------------------------------------------------------------</span>
+5.17 g:splice_config.prefix                              <a name="SpliceConfig_prefix" class="t">SpliceConfig_prefix</a>
+
+Set this to change the prefix <a href="splice.txt.html#Splice" class="d">Splice</a> will bind all of its mappings to; if not
+set the value of <a href="splice.txt.html#SpliceConfig_leader" class="l">SpliceConfig_leader</a> is considered.
+
+For example: 
+
+<span class="e">    let g:splice_config.prefix = &quot;&lt;leader&gt;t&quot;</span>
+
+Will make all <a href="splice.txt.html#Splice" class="d">Splice</a> commands start with <span class="s">&lt;leader&gt;</span>t instead of the default &#x27;-&#x27;.
+
+Options: Any valid key mapping string
+Default: &quot;-&quot;, if &quot;leader&quot; is not set
+
+<span class="h">------------------------------------------------------------------------------</span>
+5.18 g:splice_config.leader                              <a name="SpliceConfig_leader" class="t">SpliceConfig_leader</a>
+
+This is a way to specify <a href="splice.txt.html#SpliceConfig_prefix" class="l">SpliceConfig_prefix</a> when it is not set. It is a way
+to to avoid changing Vim&#x27;s <span class="l">mapleader</span>. See the <a href="splice.txt.html#SpliceChangelog" class="l">SpliceChangelog</a>.
+
+For example: 
+
+<span class="e">    let g:splice_config.leader = &#x27;,,&#x27;</span>
+
+If &quot;prefix&quot; is not set, will make <a href="splice.txt.html#Splice" class="d">Splice</a> commands, start with &#x27;,,&#x27; instead of
+the default &#x27;-&#x27;.
+
+This is the algorithm used to initialize <a href="splice.txt.html#SpliceConfig_prefix" class="l">SpliceConfig_prefix</a> 
+<span class="e">        if not exist prefix</span>
+<span class="e">            if exist leader</span>
+<span class="e">                prefix = leader</span>
+<span class="e">            else</span>
+<span class="e">                prefix = &#x27;-&#x27;</span>
+
+Options: Any valid key mapping string
+Default: None
+
+<span class="h">------------------------------------------------------------------------------</span>
+5.19 g:splice_config.bind_use_alt                      <a name="SpliceConfig_bind_alt" class="t">SpliceConfig_bind_alt</a>
+
+Set this to 1 or true to use the Alt key instead of a prefix.
+
+For example: 
+<span class="e">    let g:splice_config.bin_use_alt = 1</span>
+
+Means hold down the Alt key and press the command character(s).
+
+Options: 1 or true
+Default: false
+
+<span class="h">------------------------------------------------------------------------------</span>
+5.20 g:splice_config.bind_&lt;command&gt;                <a name="SpliceConfig_bind_command" class="t">SpliceConfig_bind_command</a>
+
+Any command can have it&#x27;s mapping explicitly set.
+
+The possible commands are 
+<span class="e">    Grid &#x27;g&#x27;        Loupe &#x27;l&#x27;       Compare &#x27;c&#x27;     Path &#x27;p&#x27;</span>
+<span class="e">    Diff &#x27;d&#x27;        DiffOff &#x27;D&#x27;     Next &#x27;n&#x27;        Previous &#x27;N&#x27;</span>
+<span class="e">    Layout &#x27; &#x27;      Scroll &#x27;s&#x27;</span>
+<span class="e">    UseHunk &#x27;u&#x27;     UseHunk0 &#x27;u0&#x27;   UseHunk1 &#x27;u1&#x27;   UseHunk2 &#x27;u2&#x27;</span>
+<span class="e">    Original &#x27;o&#x27;    Result &#x27;r&#x27;      One &#x27;1&#x27;         Two &#x27;2&#x27;</span>
+<span class="e">    Quit &#x27;q&#x27;        Cancel &#x27;CC&#x27;</span>
+
+For example, with the option 
+<span class="e">    g:splice_config.bind_Grid = &#x27;&lt;F7&gt;&#x27;</span>
+press function key F7 for grid mode.
+
+Options: Any valid key mapping string
+Default: The default characters are shown in quotes above.
+
+<span class="h">------------------------------------------------------------------------------</span>
+5.21 g:splice_config.bind_extra                      <a name="SpliceConfig_bind_extra" class="t">SpliceConfig_bind_extra</a>
+
+In addtion to the normal key bindings, addtional bindings can be specified.
+See <a href="splice.txt.html#SpliceConfig_bind_command" class="l">SpliceConfig_bind_command</a> for the list of commands.
+
+For example, with the option 
+<span class="e">    bind_extra: [ [&#x27;&lt;F12&gt;&#x27;, &#x27;Grid&#x27;], [&#x27;&lt;F7&gt;&#x27;, &#x27;Grid&#x27;] ]</span>
+pressing F7 or F12 goes to `grid` mode. The normal `grid` mode mapping is
+also in effect; so the shortucts display shows three mappings for `grid` mode.
+
+Options: list of lists, like: [ [ &#x27;map_keys&#x27;, &#x27;command_name&#x27; ], ... ]
+Default: an empty list
+
+
+<span class="h">------------------------------------------------------------------------------</span>
+5.22 g:splice_config.hl_&lt;highlight&gt;                  <a name="SpliceConfig_highlights" class="t">SpliceConfig_highlights</a>
+
+Splice9 uses several highlights. They can be configured. Most are in the HUD.
+
+          config name      default            description 
+<span class="e">        hl_label        &#x27;SpliceLabel&#x27;       3 region labels                HUD</span>
+<span class="e">        hl_sep          &#x27;SpliceLabel&#x27;       region separators              HUD</span>
+<span class="e">        hl_command      &#x27;SpliceCommand&#x27;     clickable commands             HUD</span>
+<span class="e">        hl_rollover     &#x27;Pmenu&#x27;             mouse over commands            HUD</span>
+<span class="e">        hl_active       &#x27;Keyword&#x27;           active mode              Modes-HUD</span>
+<span class="e">        hl_diff         &#x27;DiffChange&#x27;        participates in diff    Layout-HUD</span>
+<span class="e">        hl_alert_popup  &#x27;Pmenu&#x27;             problem popup                  </span>
+<span class="e">        hl_popup        &#x27;ColorColumn&#x27;       info popup, like for shortcuts</span>
+<span class="e">        hl_heading      &#x27;SpliceUnderline&#x27;   popup heading, like for shortcuts</span>
+<span class="e">        hl_conflict     &#x27;SpliceConflict&#x27;    conflict marker</span>
+<span class="e">        hl_cur_conflict &#x27;SpliceCurConflict&#x27; current conflict marker</span>
+<span class="e">        hl_cursor_line  &#x27;SpliceUnderline&#x27;   all (diff) windows cursor line</span>
+<span class="e">        hl_flash_cursor &#x27;Pmenu&#x27;             all windows flash cursor line</span>
+
+For example: 
+<span class="e">    let g:splice_config.hl_label = &#x27;WildMenu&#x27;</span>
+displays the HUD region labels with yellow marker or as WildMenu is defined.
+
+Options: Any valid highlight
+
+*<span class="n">Note:</span> Bring up the shortcut popup by clicking on &quot;<a href="splice.txt.html#Splice" class="d">Splice</a> Commands:&quot; at the
+       top of the screen.
+*<span class="n">Note:</span> SpliceConflict link CursorColumn, SpliceCConflict link Todo
+
+
+<span class="h">------------------------------------------------------------------------------</span>
+5.23 g:splice_config.flash_cursor_timer            <a name="SpliceConfig_cursor_timer" class="t">SpliceConfig_cursor_timer</a>
+
+In some situations, when the windows are changed around, the cursor line in
+each window is highlighted for a duration of time. The duration is specified
+in milli-seconds.
+
+For example, with the option 
+<span class="e">    g:splice_config.flash_cursor_timer = 2000</span>
+the duration of the cursor line highlight is 2 seconds.
+
+Options: number in milli-seconds
+Default: 1000 - for a 1 second duration
+
+<span class="h">------------------------------------------------------------------------------</span>
+5.24 g:splice_config.log_&lt;config&gt;                       <a name="SpliceConfig_logging" class="t">SpliceConfig_logging</a>
+
+<a href="splice.txt.html#Splice" class="l">Splice</a> logging has options. They specify whether logging is enabled, the log
+file path and name, which logging categories are excluded.
+
+          config name                 default 
+<span class="e">        log_enable                  false</span>
+<span class="e">        log_file                    $HOME/SPLICE_LOG</span>
+<span class="e">        log_exclude_categories      [&#x27;focus&#x27;, &#x27;result&#x27;, &#x27;setting&#x27;, &#x27;diffopts&#x27;]</span>
+<span class="e">        log_add_exclude_categories    []</span>
+<span class="e">        log_remove_exclude_categories []</span>
+
+For example, with the option 
+<span class="e">    g:splice_config.log_remove_exclude_categories = [ &#x27;result&#x27; ]</span>
+the `result` category is output into the log file.
+
+Options: Any string; has no effect if not a known category
+
+<span class="h">==============================================================================</span>
+6. HUD                                                             <a name="SpliceHUD" class="t">SpliceHUD</a>
+
+The heads up display, HUD, is active. Command names are highlighted when the
+mouse rolls over them and clicking them executes the comand. There are state
+indicators and some popup dialogs that may be invoked.
+
+<span class="h">------------------------------------------------------------------------------</span>
+6.1 Diffs Off                                             <a name="SpliceHUD_DiffsOff" class="t">SpliceHUD_DiffsOff</a>
+
+With a &#x27;*&#x27;, the `diffs off` button indicates diff mode is on. In addition, in
+given mode when diffs are turned on, the `diffs off` button becomes a toggle
+for turning diff on/off.
+
+    - D:*diffs off
+
+<span class="h">------------------------------------------------------------------------------</span>
+6.2 Toggle Scrollbind                             <a name="SpliceHUD_ToggleScrollbind" class="t">SpliceHUD_ToggleScrollbind</a>
+
+With a &#x27;*&#x27;, the the `toggle scrollbind` button indicates scrollbind is on.
+ScrollBind is on automatically when diffs are on, otherwise it can be toggled. 
+
+    - s:*toggle scrollbind
+
+<span class="h">------------------------------------------------------------------------------</span>
+6.3 <a href="splice.txt.html#Layout" class="d">Layout</a> and diff                                         <a name="SpliceHUD_Layout" class="t">SpliceHUD_Layout</a>
+
+When diffs are on/enabled, the <a href="splice.txt.html#Layout" class="d">Layout</a> section highlights the files/windows
+participating in the diff.
+
+<span class="h">------------------------------------------------------------------------------</span>
+6.4 <a href="splice.txt.html#Diff" class="d">Diff</a> Options Dialog                                <a name="SpliceHUD_DiffOptions" class="t">SpliceHUD_DiffOptions</a>
+
+The `Diff Options` button brings up a modal dialog to change diff and wrap
+settings. The dialog must the . Click on a boolean option line to toggle
+its state. Click on a radio button option to select it and turn off any
+other options in the group. Entering `CTRL-C` closes the dialog and no
+actions are taken. `x` or `ESC` or clicking at the the bottom of the dialog
+closes the dialog and applies the changes.
+
+Some of vim&#x27;s <span class="l">&#x27;diffopt&#x27;</span> options may be changed; refer to the vim help for
+information about these optins. The supported boolean options are:
+
+    - filler
+    - iblank
+    - icase
+    - iwhite
+    - iwhiteall
+    - followwrap
+    - internal
+    - indent-heuristic
+
+The splice `wrap` option may be changed. When the dialog is closed, the
+option is immediately applied to the open windows, unless a `wrap-all-*`
+button is enabled.
+
+    - wrap
+
+A `wrap-all-*` radio button is applied to the open windows when the dialog is
+closed; it overrides the splice `wrap` setting. Use `wrap-all-no-change` to
+prevent the wrap of the open windows from changing to the `wrap` setting.
+
+    - wrap-all-on
+    - wrap-all-off
+    - wrap-all-no-change
+
+<span class="h">------------------------------------------------------------------------------</span>
+6.5 <a href="splice.txt.html#Splice" class="d">Splice</a> Command Shortcuts Dialog                      <a name="SpliceHUD_Shortcuts" class="t">SpliceHUD_Shortcuts</a>
+
+Click on `Splice Commands:` to bring up a non-modal dialog with a list of
+splice commands and their current shortcuts. <span class="n">Note</span> that a command might have
+more than one shortcut.
+
+<span class="h">==============================================================================</span>
+7. External Website                                           <a name="SpliceExternal" class="t">SpliceExternal</a>
+
+The splice9 github pages have a variety of information, see
+
+    The site    <a class="u" href="https://github.com/errael/splice9">https://github.com/errael/splice9</a>
+    README      <a class="u" href="https://github.com/errael/splice9#splice9">https://github.com/errael/splice9#splice9</a>
+    WIKI        <a class="u" href="https://github.com/errael/splice9/wiki">https://github.com/errael/splice9/wiki</a>
+
+<span class="h">==============================================================================</span>
+8. License                                                     <a name="SpliceLicense" class="t">SpliceLicense</a>
+
+Splice9 is copyright Steve Losh, Ernie Rael &amp; contributors, 2011+ and is
+licensed under the MIT/X11 license.
+
+<span class="h">==============================================================================</span>
+9. Bugs                                                           <a name="SpliceBugs" class="t">SpliceBugs</a>
+
+Please report any bugs you may find on the GitHub issue tracker:
+
+    <a class="u" href="http://github.com/errael/splice9/issues">http://github.com/errael/splice9/issues</a>
+
+<span class="h">==============================================================================</span>
+10. Contributing                                          <a name="SpliceContributing" class="t">SpliceContributing</a>
+
+Think you can make <a href="splice.txt.html#Splice" class="d">Splice</a> better?  Awesome.  New contributors are always
+welcome.
+
+Email a patch to errael@raelity.com or send a pull request.
+
+    GitHub:    <a class="u" href="https://github.com/errael/splice9">https://github.com/errael/splice9</a>
+
+<span class="h">==============================================================================</span>
+11. Changelog                                                <a name="SpliceChangelog" class="t">SpliceChangelog</a>
+
+11.1 Splice9
+
+v1.0.0
+<span class="c">   </span> * &quot;UseBoth&quot; command to select both &quot;<a href="splice.txt.html#One" class="d">One</a>&quot; and &quot;<a href="splice.txt.html#Two" class="d">Two</a>&quot; hunks.
+<span class="c">   </span> * &quot;<a href="splice.txt.html#Diff" class="d">Diff</a> Options&quot; HUD button to bring up dialog to configure vim&#x27;s
+      `diffopt` and splice9&#x27;s `wrap` option and visible windows wrap.
+<span class="c">   </span> * A few addtional error popups for some things that were quietly ignored.
+      v0.9
+<span class="c">   </span> * Pure vim9 release of splice, no python required.
+<span class="c">   </span> * Plug in compatible with splice.vim and its configuration.
+<span class="c">   </span> * New configuration style avaiable through `g:splice_config` dictionary.
+<span class="c">   </span> * HUD is hot; command names are clickable buttons.
+<span class="c">   </span> * &quot;D: diffs off&quot; extended to toggle off/on button.
+<span class="c">   </span> * All highlights are configurable.
+<span class="c">   </span> * Additional HUD status indicators without increasing HUD size.
+<span class="c">   </span> * Update vim help. Github Readme and wiki.
+
+11.2 <a href="splice.txt.html#Splice" class="d">Splice</a>
+
+This is the splice.vim changelog
+
+v1.1.0
+<span class="c">   </span> * Initial Python 3 support. v1.0.1
+<span class="c">   </span> * Fix the splice_config.prefix setting to actually take effect as
+      documented.
+<span class="c">   </span> * Fix the grid view showing the wrong buffers sometimes.
+<span class="c">   </span> * Set the filetype in each buffer.
+<span class="c">   </span> * Fix showing files 2 and result in compare mode. v1.0.0
+<span class="c">   </span> * Rename to Splice.
+<span class="c">   </span> * Change the default prefix to &#x27;-&#x27; instead of <span class="s">&lt;localleader&gt;</span>.
+<span class="c">   </span> * Various bugfixes. v0.2.0
+<span class="c">   </span> * Add threesome_leader as a config option. v0.1.1
+<span class="c">   </span> * Fix a bug when the user doesn&#x27;t use :set hidden. v0.1.0
+<span class="c">   </span> * Preliminary &quot;it probably won&#x27;t eat your data&quot; release! v0.0.8
+<span class="c">   </span> * A bunch of cleanup. v0.0.7
+<span class="c">   </span> * Add use hunk functionality. v0.0.6
+<span class="c">   </span> * Add the HUD.
+<span class="c">   </span> * Configurable wrapping. v0.0.5
+<span class="c">   </span> * Configurable scrollbinding. v0.0.4
+<span class="c">   </span> * Basic configuration settings. v0.0.3
+<span class="c">   </span> * Multiple layout support. v0.0.2
+<span class="c">   </span> * There&#x27;s still not much working, but at least there&#x27;s some help now!
+      v0.0.1
+<span class="c">   </span> * Oh god nothing works please don&#x27;t use this for real work yet.
+
+<span class="h">==============================================================================</span>
+12. Credits                                                    <a name="SpliceCredits" class="t">SpliceCredits</a>
+
+<a href="splice.txt.html#Splice" class="d">Splice</a> was originally written by Steve Losh after he got fed up with the lack
+of a powerful, intuitive, beautiful three-way merge program on OS X.
+
+A lot of the inspiration for the layout of the code came from vim-orgmode.
+
+The UI is a combination of ideas from Conflict2Diff.vim, Fugitive.vim, and
+Adobe Lightroom.
+
+Splice9 was ported from vim9script/Python by Ernie Rael as a way to learn
+vim9script and get more comfortable with merging. Splice9 is extended with a
+clickable HUD and popup dialogs and better error checking and reporting.
+
+<span class="h">==============================================================================</span>
+
+ vim:ts=4:et:ft=help:
+
+</pre>
+</div>
+
+<p id="footer">These help files are maintained with thanks
+to Carlo Teubner for his vimhelp to html work.</p>
+
+</div>
+</div>
+</body></html>
