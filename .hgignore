@@ -1,0 +1,34 @@
+syntax: glob
+
+
+
+*~
+*.sw[pmno]
+*.orig
+*.orig.*
+*.rej
+tags
+
+*.pyc
+
+syntax: rootglob
+
+release
+build
+stuff
+
+archive
+
+testing/play
+testing/SPLICE_LOG
+testing/result
+
+
+syntax: glob
+
+tests/one
+tests/two
+tests/original
+tests/result
+tests/*.err
+
